@@ -21,19 +21,7 @@ The Caddyfile is an easy way to configure your Caddy web server.
  Caddy Reverse Proxy Configuration Notes
 ----------------------------------------
 
- Architecture:
-
-   Internet
-      |
-      v
-   Cloudflare
-      |
-      v
-   Caddy (reverse proxy + TLS)
-      |
-      +--> Authelia (access control)
-      |
-      +--> Backend applications
+<img width="495" height="381" alt="grafik" src="https://github.com/user-attachments/assets/845658d4-9828-4b45-9481-ccfb501c8529" />
 
 
  Authentication model:
@@ -78,17 +66,8 @@ The Caddyfile is an easy way to configure your Caddy web server.
 
  Without special handling:
 
-   Browser
-      |
-      | Authorization: MediaBrowser ...
-      v
-   Caddy
-      |
-      v
-   Authelia forward_auth
-      |
-      v
-   401 Unauthorized
+<img width="598" height="301" alt="grafik" src="https://github.com/user-attachments/assets/84a7dffc-3d71-4edd-b53d-ab59b9afd00f" />
+
 
  Authelia attempts to parse the Authorization header and
  rejects the unknown "MediaBrowser" scheme before Jellyfin
@@ -110,16 +89,8 @@ The Caddyfile is an easy way to configure your Caddy web server.
 
  Result:
 
-   Client
-      |
-      v
-   Caddy
-      |
-      +--> Authelia
-      |       (checks session cookie only)
-      |
-      +--> Jellyfin
-              (receives MediaBrowser authentication)
+<img width="651" height="286" alt="grafik" src="https://github.com/user-attachments/assets/d6b981e7-665a-4afb-a2fa-7beb7d2c69b4" />
+
 
 
 
