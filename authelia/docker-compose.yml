@@ -1,4 +1,4 @@
-#change the biund mount location /home/ubuntu/authelia/config as desired
+#change the bind mount location /home/ubuntu/authelia/config as desired
 #place user_database.yml and configuration.yml at the bind mount location
 
 #start authelia using
