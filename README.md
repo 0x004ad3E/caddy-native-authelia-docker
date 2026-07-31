@@ -28,6 +28,7 @@ Start Caddy
 * Check and replace caddy executable with latest caddy executable with cloudflare integration from https://github.com/caddy-dns/cloudflare/tags
 * Copy the Caddyfile to  /etc/caddy/Caddyfile
 * Modify the Caddyfile as required
+* Check cloudflare token with - curl "https://api.cloudflare.com/client/v4/user/tokens/verify" -H "Authorization: Bearer <apikey>"
 * Start / Restart caddy - sudo systemctl restart/start caddy
 
 
