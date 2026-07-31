@@ -1,3 +1,16 @@
+#change the biund mount location /home/ubuntu/authelia/config as desired
+#place user_database.yml and configuration.yml at the bind mount location
+
+#start authelia using
+#<sudo> docker compose up
+
+#stop/restart
+#<sudo> docker compose down
+#<sudo> docker compose restart
+
+#ports - change this to port of choice
+
+
 services:
   authelia:
     image: authelia/authelia:latest
@@ -5,7 +18,7 @@ services:
     restart: unless-stopped
 
     ports:
-      - "127.0.0.1:9091:9091"
+      - "127.0.0.1:9091"
 
     volumes:
       - /home/ubuntu/authelia/config:/config
