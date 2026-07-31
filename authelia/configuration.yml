@@ -1,0 +1,193 @@
+#place this file in the bind mount specified in the docker-compose.yml
+#run this command from where docker-compose.yml is present to validate the config file 
+#docker compose exec authelia authelia config validate --config /config/configuration.yml
+
+#note the port, change this if it is changed in docker-compose.yml
+server:
+  address: tcp://0.0.0.0:9091
+
+
+log:
+  level: info
+
+webauthn:
+  disable: false
+
+  # Allows "Sign in with Passkey"
+  enable_passkey_login: true
+
+  attestation_conveyance_preference: "direct"
+
+  filtering:
+    prohibit_backup_eligibility: true
+
+  display_name: "Authelia"
+
+  timeout: "60 seconds"
+
+  selection_criteria:
+    discoverability: preferred
+    user_verification: required
+
+  metadata:
+    enabled: true
+    cache_policy: relaxed
+    validate_trust_anchor: true
+    validate_entry: true
+    validate_status: true
+
+identity_validation:
+  reset_password:
+    #execute the command and paste the secret here
+    #openssl rand -hex 64
+    jwt_secret: <secret>
+
+authentication_backend:
+  file:
+    path: /config/users_database.yml
+
+session:
+  #execute the command and paste the secret here
+  #openssl rand -hex 64
+  secret: <secret>
+
+  #get your domain name and place it here
+  cookies:
+    - domain: <yourdomain.com>
+      authelia_url: https://auth.<yourdomain.com>
+
+
+storage:
+  local:
+    path: /config/db.sqlite3
+
+  #execute the command and paste the secret here
+  #openssl rand -hex 64
+  encryption_key: <secret>
+
+
+access_control:
+  default_policy: deny
+
+  rules:
+
+    #domains that use access control via foward auth
+    - domain:
+        - site1.<yourdomain.com>
+        - site2.<yourdomain.com>
+        - site3.<yourdomain.com>
+      policy: two_factor
+
+#you get notifications here
+#either file or smpt if available
+#for smpt see
+#https://github.com/authelia/authelia/blob/master/examples/compose/lite/authelia/configuration.yml
+notifier:
+  filesystem:
+    filename: /config/notification.txt
+
+identity_providers:
+#setup oidc provider
+  oidc:
+
+    #execute the command and pate the secret here 
+    #openssl rand -hex 64
+    hmac_secret: "<secret>"
+
+    #execute the commands from the location where docker-compose.yml is located to generate the keys
+    #sudo docker compose exec authelia authelia crypto pair rsa generate
+
+    #now copy the files to current directory and remove from container
+    #sudo docker compose cp authelia:/app/private.pem .
+    #sudo docker compose exec authelia rm /app/private.pem /app/public.pem
+    
+    #generate ther certificate file valid for 3650 days
+    #sudo openssl req   -new   -x509   -key private.pem   -out certificate.pem -days 3650   -subj "/CN=Authelia OIDC"
+
+    jwks:
+      - key_id: "main"
+        algorithm: "RS256"
+        use: "sig"
+        key: |
+          -----BEGIN PRIVATE KEY-----
+          <paste contents of private.pem and format to be correctly aligned between -----BEGIN PRIVATE KEY----- and -----END PRIVATE KEY----->
+          -----END PRIVATE KEY-----
+        certificate_chain: |
+          -----BEGIN CERTIFICATE-----
+          <paste contents of certificate.pem same formatting as above>
+          -----END CERTIFICATE-----
+
+    #not sure about the immich_quota config below
+    #i just copied it from authelia example
+    claims_policies:
+      immich_policy:
+        custom_claims:
+          immich_quota:
+            attribute: 'immich_quota'
+    scopes:
+      immich_scope:
+        claims:
+          - 'immich_quota'
+
+
+    clients:
+      - client_id: "immich"
+        client_name: "Immich"
+
+        
+         #execute the command and pate the secret here 
+         #openssl rand -base64 48
+         #[use this secret in the following command and also in the immich config]
+         #execute the commands from the location where docker-compose.yml is located to generate argon2 secret
+         #sudo docker compose exec authelia authelia crypto hash generate argon2 --password 'output of the openssl command'
+        client_secret: "argon2 secret here"
+
+        public: false
+
+        authorization_policy: "two_factor"
+
+        require_pkce: false
+        pkce_challenge_method: ""
+
+        redirect_uris:
+          - "https://immich.<yourdomain.com>/auth/login"
+          - "https://immich.<yourdomain.com>/user-settings"
+          - "app.immich:///oauth-callback"
+
+        scopes:
+          - "openid"
+          - "profile"
+          - "email"
+
+        response_types:
+          - "code"
+
+        grant_types:
+          - 'authorization_code'
+        #for signing the id_token and userinfo token. also set in immich config
+        id_token_signed_response_alg: 'RS256'
+        userinfo_signed_response_alg: 'RS256'
+        token_endpoint_auth_method: 'client_secret_post'
+
+      - client_id: "nextcloud"
+        client_name: "NextCloud"
+        #see instruction above to generate argon2 secret. the base64 hash needs to be updated in nextcloud config
+        client_secret: "paste argon2 hash here"
+        public: false
+        authorization_policy: "two_factor"
+        require_pkce: true
+        pkce_challenge_method: "S256"
+        redirect_uris:
+          - "https://nextcloud.<yourdomain.com>/apps/user_oidc/code"
+        scopes:
+          - "openid"
+          - "profile"
+          - "email"
+          - "groups"
+        response_types:
+          - "code"
+        grant_types:
+          - "authorization_code"
+        access_token_signed_response_alg: "none"
+        userinfo_signed_response_alg: "none"
+        token_endpoint_auth_method: "client_secret_post"
