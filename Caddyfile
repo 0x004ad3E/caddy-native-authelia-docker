@@ -1,0 +1,109 @@
+#this file is usually located at /etc/caddy/Caddyfile
+
+#use this command to validate this file
+#caddy validate --config /etc/caddy/Caddyfile
+
+#if any issues are identified in this file, fix using this command
+#caddy fmt --overwrite /etc/caddy/Caddyfile
+
+#since we configured dns challenge, when a new subdomain is added
+#caddy automatically creates the tls certificate for the subdomain
+
+#sites are running at different ports on local machine 10.18.0.3
+#change this ip to match your machine ip
+
+
+{
+        
+        #generate key from cloudflare
+        #for dns challenge when port 80 443 is not accessible on the server
+        acme_dns cloudflare <place cloudflare api key here>
+        servers {
+                trusted_proxies static \
+ 173.245.48.0/20 \
+ 103.21.244.0/22 \
+ 103.22.200.0/22 \
+ 103.31.4.0/22 \
+ 141.101.64.0/18 \
+ 108.162.192.0/18 \
+ 190.93.240.0/20 \
+ 188.114.96.0/20 \
+ 197.234.240.0/22 \
+ 198.41.128.0/17 \
+ 162.158.0.0/15 \
+ 104.16.0.0/13 \
+ 104.24.0.0/14 \
+ 172.64.0.0/13 \
+ 131.0.72.0/22
+
+                trusted_proxies_strict
+        }
+}
+
+# authelia running on 127.0.0.1:9091
+(auth) {
+        forward_auth 127.0.0.1:9091 {
+                uri /api/authz/forward-auth
+
+                copy_headers \
+ Remote-User \
+ Remote-Groups \
+ Remote-Name \
+ Remote-Email
+        }
+}
+
+#jellyfin does not work when Authorization is present, so remove it
+(auth-jellyfin) {
+        forward_auth 127.0.0.1:9091 {
+                uri /api/authz/forward-auth
+
+                header_up -Authorization
+
+                copy_headers \
+ Remote-User \
+ Remote-Groups \
+ Remote-Name \
+ Remote-Email
+        }
+}
+
+#authelia is accessed on auth.<yourdomain.com>
+#authelia running on 127.0.0.1:9091
+auth.<yourdomain.com> {
+        reverse_proxy 127.0.0.1:9091
+}
+
+
+#use special forward auth for jellyfin
+jellyfin.<yourdomain.com> {
+        import auth-jellyfin
+        reverse_proxy 10.18.0.3:8096 {
+        }
+}
+
+#someapp with default forward auth
+someapp.<yourdomain.com> {
+        import auth
+        reverse_proxy 10.18.0.3:8055
+}
+
+#qbittorrent requires Host
+qbittorrent.<yourdomain.com> {
+        import auth
+        reverse_proxy 10.18.0.3:6520 {
+                header_up Host {host}
+        }
+}
+
+#immich uses oidc, so only do reverse proxy, no forward auth
+#immich uses authelia directly
+immich.<yourdomain.com> {
+        reverse_proxy 10.18.0.3:2283
+}
+
+#nextcloud uses oidc, so only do reverse proxy, no forward auth
+#nextcloud uses authelia directly
+nextcloud.<yourdomain.com> {
+        reverse_proxy 10.18.0.3:7050
+}
