@@ -11,9 +11,9 @@ this is for configuring caddy-native with authelia-docker
 
 Note: Generate API key from Cloudflare for dns challenge [see other repo for details]
 
-See authelia/docker-compose.yml for authelia docker
-See authelia/users.yml for adding users for authentication
-See authelia/configuration.yml for authelia configuration to support forward auth and oidc
+* See authelia/docker-compose.yml for authelia docker
+* See authelia/users.yml for adding users for authentication
+* See authelia/configuration.yml for authelia configuration to support forward auth and oidc
 
 
 Caddy configuration
