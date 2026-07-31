@@ -4,7 +4,8 @@ this is for configuring caddy-native with authelia-docker
 - Domains configured in orange cloudflare
 - Trusted cloudflare proxies. Access only via cloudflare proxy
 - Cloudflare dns challenge for ssl certificates
-- Sites with Foward auth (Authelia)
+- Use authelia for authentication
+- Sites with Foward auth
 - Sites without Forward auth
 - Sites with oidc for immich(docker), nextcloud(docker) [see other repos for details]
 - Forward auth for Jellyfin with custom headers
