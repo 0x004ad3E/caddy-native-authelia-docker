@@ -11,12 +11,18 @@ this is for configuring caddy-native with authelia-docker
 
 Note: Generate API key from Cloudflare for dns challenge [see other repo for details]
 
+See authelia/docker-compose.yml for authelia docker
+See authelia/users.yml for adding users for authentication
+See authelia/configuration.yml for authelia configuration to support forward auth and oidc
+
+
+Caddy configuration
+-------------------
 The Caddyfile is an easy way to configure your Caddy web server.
 
  To use your own domain name (with automatic HTTPS), first make
  sure your domain's A/AAAA DNS records are properly pointed to
  this machine's public IP
-
 
  Caddy Reverse Proxy Configuration Notes
 ----------------------------------------
