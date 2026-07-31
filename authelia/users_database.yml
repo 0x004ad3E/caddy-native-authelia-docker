@@ -1,0 +1,28 @@
+#place this file in the docker bind mount specified in the docker-compose.yml
+
+#add users as necessary
+
+#when user logs in with correct password, usually a notification is sent for the one time code
+#enable this in configuration if smpt is available
+#otherwise notification is available in the notification.txt
+#in the bind mount
+
+#command to generate the argon2 hash for password
+#run from the location where authelia docker-compose.yml is located
+
+#sudo docker compose exec authelia \
+#authelia crypto hash generate argon2 \
+#--password '<put password here>' 
+
+#copy the entire line starting with $argon2id and replace below
+#do this for each user
+
+users:
+  admin:
+    displayname: Admin
+    password: "$argon2id..."
+    email: <email>
+  user1:
+    displayname: UserOne
+    password: "$argon2id..."
+    email: <email>
