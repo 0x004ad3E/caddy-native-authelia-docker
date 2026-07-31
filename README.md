@@ -25,7 +25,7 @@ Start authelia
 Start Caddy
 -----------
 * Install caddy
-* Check and replace caddy executable with latest caddy executable with cloudflare integration from https://github.com/caddy-dns/cloudflare
+* Check and replace caddy executable with latest caddy executable with cloudflare integration from https://github.com/caddy-dns/cloudflare/tags
 * Copy the Caddyfile to  /etc/caddy/Caddyfile
 * Modify the Caddyfile as required
 * Start / Restart caddy - sudo systemctl restart/start caddy
