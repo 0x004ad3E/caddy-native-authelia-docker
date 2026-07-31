@@ -18,6 +18,9 @@
         #generate key from cloudflare
         #for dns challenge when port 80 443 is not accessible on the server
         acme_dns cloudflare <place cloudflare api key here>
+
+        #only access the sites via cloudflare proxies
+        #so whitelist the cloudflare proxy ips
         servers {
                 trusted_proxies static \
  173.245.48.0/20 \
