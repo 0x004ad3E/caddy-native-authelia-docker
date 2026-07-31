@@ -48,9 +48,9 @@ The Caddyfile is an easy way to configure your Caddy web server.
          and API authentication.
 
 
- ============================================================
+
  Authelia forward_auth notes
- ============================================================
+------------------------------
 
  The "forward_auth" directive works by:
 
@@ -64,9 +64,9 @@ The Caddyfile is an easy way to configure your Caddy web server.
       to the backend application.
 
 
- ============================================================
+
  Jellyfin special handling
- ============================================================
+------------------------------
 
  Jellyfin cannot use the normal Authelia authentication
  snippet because Jellyfin uses its own HTTP Authorization
@@ -122,9 +122,9 @@ The Caddyfile is an easy way to configure your Caddy web server.
               (receives MediaBrowser authentication)
 
 
- ============================================================
+
  Why there are two authentication snippets
- ============================================================
+ -----------------------------------------
 
  (auth)
 
@@ -139,9 +139,9 @@ The Caddyfile is an easy way to configure your Caddy web server.
    Jellyfin uses the custom MediaBrowser authentication scheme.
 
 
- ============================================================
+
  Maintenance notes
- ============================================================
+--------------------------
 
  - If Authelia, Caddy, or Jellyfin are upgraded, retest whether
    the Jellyfin-specific workaround is still required.
