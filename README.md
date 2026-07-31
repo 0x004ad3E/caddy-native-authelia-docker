@@ -15,6 +15,19 @@ Note: Generate API key from Cloudflare for dns challenge [see other repo for det
 * See authelia/users.yml for adding users for authentication
 * See authelia/configuration.yml for authelia configuration to support forward auth and oidc
 
+Start authelia
+--------------
+* Copy authelia/docker-compose.yml to /opt/authelia/docker-compose.yml
+* Copy users_database.yml and configuration.yml to the bind mount location (see docker-compose.yml)
+* Start authelia docker (see docker-compose.yml)
+
+Start Caddy
+-----------
+* Install caddy
+* Copy the Caddyfile to  /etc/caddy/Caddyfile
+* Modify the Caddyfile as required
+* Start / Restart caddy - sudo systemctl restart/start caddy
+
 
 Caddy configuration
 -------------------
