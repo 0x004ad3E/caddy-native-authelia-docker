@@ -17,9 +17,9 @@ The Caddyfile is an easy way to configure your Caddy web server.
  sure your domain's A/AAAA DNS records are properly pointed to
  this machine's public IP
 
- ============================================================
+
  Caddy Reverse Proxy Configuration Notes
- ============================================================
+----------------------------------------
 
  Architecture:
 
